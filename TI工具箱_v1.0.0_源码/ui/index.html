@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TI工具箱</title>
+<script>try{var _t=localStorage.getItem("ti-theme");document.documentElement.setAttribute("data-theme", _t==="light"?"light":"dark");}catch(e){document.documentElement.setAttribute("data-theme","dark");}</script>
+<link rel="stylesheet" href="style.css?v=5">
+</head>
+<body>
+<div id="splash">
+  <img class="lg-light" src="logo-ti-black.webp" alt="">
+  <img class="lg-dark" src="logo-ti-white.webp" alt="">
+</div>
+<div class="app">
+<div class="winbar">
+  <div class="wbrand"><img class="lg-light" src="logo-ti-black.webp" alt=""><img class="lg-dark" src="logo-ti-white.webp" alt=""><span>工具箱<em>UE TOOLBOX</em></span></div>
+  <div class="dragzone" id="dragzone"></div>
+  <div class="winctrls">
+    <button id="wmin" title="最小化"><svg viewBox="0 0 12 12"><path d="M2 6h8"/></svg></button>
+    <button id="wmax" title="最大化"><svg viewBox="0 0 12 12"><rect x="2.2" y="2.2" width="7.6" height="7.6" rx="1.2"/></svg></button>
+    <button id="wclose" class="danger" title="关闭"><svg viewBox="0 0 12 12"><path d="M2.6 2.6l6.8 6.8M9.4 2.6L2.6 9.4"/></svg></button>
+  </div>
+</div>
+  <!-- 侧边栏：工具列表 -->
+  <div class="work">
+<aside class="side">
+    <div class="brand">
+      <div class="logo"><img class="lg-light" src="logo-ti-black.webp" alt="TI"><img class="lg-dark" src="logo-ti-white.webp" alt="TI"></div>
+      <div class="brand-txt">
+        <h1>工具箱</h1>
+        <p>UE TOOLBOX</p>
+      </div>
+    </div>
+
+    <div class="side-cap">工具</div>
+    <nav id="nav"></nav>
+
+    <div class="side-foot">
+      <button id="newVer" class="newver" hidden>新版本可用</button>
+      <button id="gear" class="gear" title="菜单">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7zm7.43-2.53c.04-.31.07-.63.07-.97s-.03-.66-.07-.97l2.11-1.63a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.6-.22l-2.48 1a7.3 7.3 0 0 0-1.69-.98l-.37-2.65a.5.5 0 0 0-.5-.43h-4a.5.5 0 0 0-.5.43l-.37 2.65c-.6.24-1.17.57-1.69.98l-2.48-1a.5.5 0 0 0-.6.22l-2 3.46a.5.5 0 0 0 .12.64l2.11 1.63c-.04.31-.07.63-.07.97s.03.66.07.97l-2.11 1.63a.5.5 0 0 0-.12.64l2 3.46c.14.24.42.34.6.22l2.48-1c.52.4 1.09.74 1.69.98l.37 2.65c.04.24.25.43.5.43h4c.25 0 .46-.19.5-.43l.37-2.65c.6-.24 1.17-.57 1.69-.98l2.48 1c.2.08.46-.02.6-.22l2-3.46a.5.5 0 0 0-.12-.64l-2.11-1.63z"/>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- 主区 -->
+  <main class="main">
+    <div id="dirbar">
+    <header class="topbar">
+      <div class="field grow">
+        <label>游戏目录</label>
+        <input id="game" spellcheck="false" list="dirhist" placeholder="可直接 Ctrl+V 粘贴路径，或点「查找目录」手动选择">
+        <datalist id="dirhist"></datalist>
+      </div>
+                <button id="browse" class="btn ghost">查找目录</button>
+    </header>
+
+    <div class="paths">
+      <div class="path"><span>exe</span><b id="exe">—</b></div>
+      <div class="path"><span>pak</span><b id="pak">—</b></div>
+    </div>
+    </div>
+
+    <section class="home" id="homePane" hidden>
+      <div class="home-hero">
+        <div class="tz" id="homeType"></div>
+        <div class="home-sign">— <b>Tirely</b></div>
+      </div>
+      <div class="home-log" id="homeLogBox">
+        <button id="homeLogToggle" class="home-log-tab">更新日志</button>
+        <div class="home-log-head"><span>更新日志</span><span class="home-log-act"><button id="logRefresh" class="btn ghost tiny">刷新</button><button id="homeLogClose" class="btn ghost tiny">收起</button></span></div>
+        <div class="home-log-body" id="homeLog">加载中…</div>
+      </div>
+    </section>
+
+    <div class="subnav" id="subnav"></div>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2 id="title">—</h2>
+        <p id="desc">—</p>
+      </div>
+      <div class="params" id="params"></div>
+      <div class="actions">
+        <button id="run" class="btn primary">开始</button>
+        <button id="stop" class="btn ghost" disabled>停止</button>
+        <span id="status" class="status">就绪</span>
+      </div>
+    </section>
+
+    <section class="assetbox" id="assetbox" hidden>
+      <div class="asset-head">
+        <span>资产路径</span>
+        <b id="assetCount">—</b>
+        <button id="assetRefresh" class="mini" type="button">刷新列表</button>
+      </div>
+      <div class="asset-list" id="assetList"></div>
+    </section>
+
+    <section class="assetbox" id="locresbox" hidden>
+      <div class="asset-head">
+        <span>LOCRES</span>
+        <b id="locresCount">—</b>
+        <input id="locresPath" class="mini-inp" spellcheck="false" placeholder="选择一个 .locres 文件">
+        <button id="locresPick" class="mini" type="button">选择 .locres</button>
+        <button id="locresView" class="mini" type="button">查看</button>
+      </div>
+      <div class="asset-list" id="locresList"></div>
+    </section>
+
+    <section class="console-wrap">
+      <div class="console-head">
+        <span>输出</span>
+        <div class="cbtns">
+          <button id="clear" class="mini">清空</button>
+          <button id="openkey" class="mini">打开 AESKEY.txt</button>
+        </div>
+      </div>
+      <pre id="log" class="log"></pre>
+    </section>
+      <div class="keybar"><button id="keyPill" class="key-pill" title="展开 AES KEY">AES KEY</button>
+      <section class="keys collapsed">
+        <div class="keys-side"><span class="ks-label">AES<br>KEY</span></div>
+        <div class="keys-body">
+          <div class="keys-head">
+            <span class="key-label">已收录</span>
+            <span class="keys-right"><span id="keycount">0</span><button id="keyToggle" class="mini">收起</button></span>
+          </div>
+          <div id="keylist" class="keylist"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+</div>
+
+<!-- 简介抽屉：从窗口右边滑出 -->
+<div id="iscrim" class="iscrim"></div>
+<aside id="intro" class="intro">
+  <div class="intro-head">
+    <div>
+      <h3 id="introTitle">—</h3>
+      <p id="introSub" class="dim"></p>
+    </div>
+    <button id="iclose" class="mini">关闭</button>
+  </div>
+  <div id="introBody" class="intro-body"></div>
+</aside>
+
+<!-- 齿轮菜单：左侧栏目 + 右侧面板 -->
+<div id="menu" class="menu-mask">
+  <div class="menu-box">
+    <nav id="menuNav" class="menu-nav">
+      <button data-pane="theme" class="on"><span>个性化</span></button>
+      <button data-pane="settings"><span>设置</span></button>
+      <button data-pane="version"><span>版本</span></button>
+      <button data-pane="about"><span>关于</span></button>
+      <div class="menu-foot"><span id="ver">V1.0.0</span></div>
+    </nav>
+    <div class="menu-body">
+      <div class="menu-top">
+        <h3 id="menuTitle">菜单</h3>
+        <button id="mclose" class="mini">关闭</button>
+      </div>
+
+      <div id="pane_theme" class="pane">
+        <div class="theme-row">界面主题</div>
+        <div class="theme-opts">
+          <div class="theme-opt on" data-theme="dark">黑</div>
+          <div class="theme-opt" data-theme="light">白</div>
+        </div>
+        <p class="hint">点一下立刻生效，写进 exe 同目录的 settings.json，下次打开还是这套。</p>
+      </div>
+
+      <div id="pane_settings" class="pane" style="display:none">
+        <label class="mf">
+          <span>工具箱路径</span>
+          <input id="s_root" spellcheck="false" readonly>
+        </label>
+        <p class="hint">工具箱根目录。全部内置工具与运行依赖位于其下的 <code>tools\</code> 子目录，后续通过仓库安装的工具同样安装至此。</p>
+        <div class="perf-title">性能</div>
+        <div class="perf-rows">
+          <div class="perf-row"><span>关闭动画</span><button type="button" class="sw" id="perf_noanim" role="switch" aria-checked="false"><i></i></button></div>
+          <div class="perf-row"><span>使用 GPU 加速</span><button type="button" class="sw" id="perf_gpu" role="switch" aria-checked="true"><i></i></button></div>
+        </div>
+        <p class="hint">关闭后立即停用全部过渡与折叠动画，不影响功能执行。GPU 加速切换后需重启程序方可生效。</p>
+
+        <label class="mf">
+          <span>默认输出目录</span>
+          <input id="s_outdir" spellcheck="false" placeholder="留空 = 工具箱目录下的 output">
+        </label>
+        <p class="hint">输出型任务的输出路径留空时，默认写入该目录。</p>
+
+        <label class="mf">
+          <span>Mappings 文件夹</span>
+          <div class="row-inline">
+            <input id="s_mapdir" spellcheck="false" placeholder="放一堆 .usmap 的目录，例如 E:\model\mapping">
+            <button id="s_mapdir_pick" class="btn ghost" type="button">选择文件夹</button>
+          </div>
+        </label>
+        <p class="hint">UAssetGUI 与 FModel 面板的映射下拉列表将从该目录（含子目录，最多 3 层）检索 .usmap 文件。</p>
+
+        <div class="menu-actions">
+          <button id="s_open" class="btn ghost">打开工具箱目录</button>
+          <button id="s_clear" class="btn ghost">清理缓存</button>
+        </div>
+      </div>
+
+      <div id="pane_version" class="pane" style="display:none">
+        <div class="ver-hero"><b id="verBig">V1.0.0</b><span>当前版本</span></div>
+        <p class="hint">版本号取自 catalog.json 的 app.version；后续更新以 GitHub 仓库的 Release 为准。</p>
+
+        <label class="mf">
+          <span>GitHub 仓库</span>
+          <input id="s_ghrepo" spellcheck="false" placeholder="https://github.com/owner/repo">
+        </label>
+        <p class="hint">填写仓库后可用于检查更新与下载新版本；留空则只做本地版本展示。支持 owner/repo 或完整地址。</p>
+
+        <label class="mf">
+          <span>GitHub Token（可选）</span>
+          <input id="s_ghtoken" spellcheck="false" placeholder="ghp_… 仅用于提高接口配额 / 访问私有仓库">
+        </label>
+        <p class="hint">留空则使用匿名请求（每小时 60 次）；填写后配额提升至 5000 次并支持私有仓库。</p>
+
+        <div class="menu-actions">
+          <button id="s_ghsave" class="btn ghost">保存仓库</button>
+          <button id="s_ghcheck" class="btn ghost">检查更新</button>
+        </div>
+        <p class="hint" id="ghStatus"></p>
+      </div>
+
+      <div id="pane_about" class="pane" style="display:none">
+        <p class="idesc">TI 工具箱 · UE4/5 工具箱</p>
+        <p class="hint">面向 UE4/UE5 工程的资源与本地化处理工具集。单文件可执行，内置密钥提取、pak 编解码、locres 本地化、文本定位、字体替换与签名绕过能力。</p>
+
+        <h4 class="about-h">功能</h4>
+        <p class="about-tags"><span>AES Key 提取</span><span>pak 解包 / 打包</span><span>locres 汉化</span><span>文本定位</span><span>字体替换</span><span>绕签名</span></p>
+
+        <h4 class="about-h">优点</h4>
+        <ul class="hint about-list">
+          <li>统一入口：密钥、解包、文本、打包、验签在同一进程内完成，免去跨工具链切换</li>
+          <li>参数可复用：目标目录与密钥按模块独立持久化，exe / pak 路径自动探测</li>
+          <li>过程可追溯：调用的命令、参数与输出完整落日志，支持复现与审计</li>
+          <li>可扩展：工具定义与调用命令由 catalog.json 声明，新增工具无需改动主程序</li>
+        </ul>
+
+        <h4 class="about-h">新增</h4>
+        <ul class="hint about-list">
+          <li>资产路径：资产查看内直接填写解包后的 Content 目录，下方列出其中的 uasset / umap / uexp 并给出计数</li>
+          <li>LOCRES 查看：选中 .locres 即可查看 key / source / target 三列与条目总数</li>
+          <li>Mappings 文件夹：设置里指定一个目录，UAssetGUI 与 FModel 面板可快速切换其中的 .usmap（含子目录，最多 3 层）</li>
+          <li>路径历史：游戏目录 / 资产目录 / 资产路径输入框记录用过的路径，可从下拉中直接选回</li>
+          <li>界面统一：深浅两套主题均为黑白配色，输入框、下拉、复选框与状态徽标采用同一套尺寸与描边</li>
+          <li>文案规范：每个功能的标题与说明统一为「做什么 + 关键参数与产物」的表述</li>
+        </ul>
+
+        <h4 class="about-h">使用</h4>
+        <ul class="hint about-list">
+          <li>本地化流程：文本抽取 → 翻译 → locres 重建 → 补丁 pak 打包 → 未签名包加载验证</li>
+          <li>Mod 制作：资源解包核查、贴图与文本替换、重新打包与加载验证</li>
+        </ul>
+
+        <h4 class="about-h">免责声明</h4>
+        <ul class="hint about-list">
+          <li>本工具仅用于个人学习与研究，面向本人持有合法授权的游戏或工程文件。</li>
+          <li>使用本工具修改、打包、注入或以其他方式处理文件所产生的全部后果，由使用者自行承担。</li>
+          <li>请勿将本工具用于商业分发、破解传播或任何侵犯他人著作权、违反当地法律法规的行为。</li>
+          <li>程序按「现状」提供，不对功能完整性、数据安全或由此导致的存档损坏、封号等损失作任何担保。</li>
+          <li>使用即表示已阅读并同意上述条款；如不同意，请立即停止使用并删除本程序。</li>
+        <li>本工具仅提供调用与整合能力，不包含也不主张任何第三方工具的所有权。FModel、UAssetGUI、repak、retoc、jmap_dumper、Dumper-7、UnrealLocres 等均由各自作者开发并保留全部权利，其版权与许可归属原作者；使用前请自行阅读并遵守对应项目的许可条款。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js?v=5"></script>
+  <button id="logPill" class="log-pill" title="打开更新日志">更新日志</button>
+<div class="rz rz-n" data-edge="n"></div><div class="rz rz-s" data-edge="s"></div><div class="rz rz-e" data-edge="e"></div><div class="rz rz-w" data-edge="w"></div><div class="rz rz-ne" data-edge="ne"></div><div class="rz rz-nw" data-edge="nw"></div><div class="rz rz-se" data-edge="se"></div><div class="rz rz-sw" data-edge="sw"></div>
+</body>
+</html></div>
+      
